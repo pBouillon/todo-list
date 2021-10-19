@@ -2,6 +2,7 @@ package io.pbouillon.todolist.presentation.dtos;
 
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class TodoItemDtoTest {
 
     @Test
+    @DisplayName("Given a TodoItem, when converting it to a DTO, then it should have the same properties")
     public void givenATodoItem_WhenConvertingItToADTO_ThenItShouldHaveTheSameProperties() {
         TodoItem expected = new TodoItem(
                 UUID.randomUUID().toString(),
