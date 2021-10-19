@@ -1,9 +1,10 @@
 package io.pbouillon.todolist.presentation.controllers;
 
 import io.pbouillon.todolist.domain.entities.TodoItem;
+import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +13,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST controller dedicated to the {@link TodoItem} resources
  */
-@Slf4j
+@Log4j2
 @RestController
-@RequestMapping(
-        path = "/api/todos",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/todos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TodoItemController {
 
     /**
@@ -30,12 +28,18 @@ public class TodoItemController {
     private final TodoItemRepository todoItemRepository;
 
     /**
+     * {@link TodoItem} mapper
+     */
+    private final TodoItemMapper todoItemMapper;
+
+    /**
      * Controller's default constructor
      * @param repository Data access object to interact with the persisted {@link TodoItem} entities
      */
     @Autowired
-    public TodoItemController(TodoItemRepository repository) {
+    public TodoItemController(TodoItemRepository repository, TodoItemMapper mapper) {
         todoItemRepository = repository;
+        todoItemMapper = mapper;
     }
 
     /**
@@ -44,13 +48,10 @@ public class TodoItemController {
      */
     @GetMapping
     public ResponseEntity<List<TodoItemDto>> getTodoItems() {
-        List<TodoItemDto> todoItems = todoItemRepository.findAll()
-                .stream()
-                .map(TodoItemDto::FromTodoItem)
-                .collect(Collectors.toList());
+        List<TodoItem> items = todoItemRepository.findAll();
+        log.info("Retrieved {} todo items", items.size());
 
-        log.info("Retrieved {} todo items", todoItems.size());
-
+        List<TodoItemDto> todoItems = todoItemMapper.toDtos(items);
         return ResponseEntity.ok()
                 .body(todoItems);
     }
@@ -62,10 +63,9 @@ public class TodoItemController {
     @GetMapping("/{id}")
     public ResponseEntity<TodoItemDto> getTodoItem(@PathVariable String id) {
         TodoItem todoItem = todoItemRepository.findById(id).orElseThrow();
-
         log.info("{} Retrieved", todoItem);
 
-        TodoItemDto dto = TodoItemDto.FromTodoItem(todoItem);
+        TodoItemDto dto = todoItemMapper.toDto(todoItem);
         return ResponseEntity.ok()
                 .body(dto);
     }
@@ -78,9 +78,7 @@ public class TodoItemController {
     @PostMapping
     public ResponseEntity<TodoItemDto> post(@RequestBody TodoItem todoItem) {
         TodoItem created = todoItemRepository.save(todoItem);
-        TodoItemDto dto = TodoItemDto.FromTodoItem(created);
-
-        log.info("{} Created", dto);
+        log.info("{} Created", created);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -88,6 +86,7 @@ public class TodoItemController {
                 .buildAndExpand(created.getId())
                 .toUri();
 
+        TodoItemDto dto = todoItemMapper.toDto(created);
         return ResponseEntity.created(location)
                 .body(dto);
     }
@@ -101,7 +100,6 @@ public class TodoItemController {
     public ResponseEntity<?> removeTodoItem(@PathVariable String id) {
         TodoItem todoItem = todoItemRepository.findById(id).orElseThrow();
         todoItemRepository.delete(todoItem);
-
         log.info("{} Deleted", todoItem);
 
         return ResponseEntity.noContent().build();

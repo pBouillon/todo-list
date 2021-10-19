@@ -6,28 +6,27 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
 import java.time.Instant;
 
 /**
  * Represent a task
  */
+@Document
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
-public class TodoItem implements Serializable {
+public class TodoItem {
 
     /**
      * The item's id in the persisted storage
      */
     @Id
-    private String id;
+    private String id = "";
 
     /**
      * The main header of the task
      */
-    private String title;
+    private String title = "";
 
     /**
      * A longer description or additional information about the task (can be null)
