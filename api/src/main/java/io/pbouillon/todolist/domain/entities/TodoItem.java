@@ -1,5 +1,6 @@
 package io.pbouillon.todolist.domain.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.time.Instant;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Document
 public class TodoItem implements Serializable {
 
@@ -28,9 +30,9 @@ public class TodoItem implements Serializable {
     private String title;
 
     /**
-     * Additional, longer description of the task
+     * A longer description or additional information about the task (can be null)
      */
-    private String description;
+    private String commentary;
 
     /**
      * The task's creation date, represented as UTC

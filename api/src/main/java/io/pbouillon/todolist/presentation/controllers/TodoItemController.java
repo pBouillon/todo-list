@@ -2,6 +2,7 @@ package io.pbouillon.todolist.presentation.controllers;
 
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
+import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * REST controller dedicated to the {@link TodoItem} resources
@@ -38,11 +40,14 @@ public class TodoItemController {
 
     /**
      * Fetch all {@link TodoItem}s
-     * @return The persisted {@link TodoItem}s
+     * @return The persisted {@link TodoItem}s as {@link TodoItemDto}s
      */
     @GetMapping
-    public ResponseEntity<List<TodoItem>> getTodoItems() {
-        List<TodoItem> todoItems = todoItemRepository.findAll();
+    public ResponseEntity<List<TodoItemDto>> getTodoItems() {
+        List<TodoItemDto> todoItems = todoItemRepository.findAll()
+                .stream()
+                .map(TodoItemDto::FromTodoItem)
+                .collect(Collectors.toList());
 
         log.info("Retrieved {} todo items", todoItems.size());
 
@@ -52,28 +57,30 @@ public class TodoItemController {
 
     /**
      * Fetch a specific {@link TodoItem}
-     * @return The serialized {@link TodoItem}
+     * @return The serialized {@link TodoItem} as {@link TodoItemDto}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TodoItem> getTodoItem(@PathVariable String id) {
+    public ResponseEntity<TodoItemDto> getTodoItem(@PathVariable String id) {
         TodoItem todoItem = todoItemRepository.findById(id).orElseThrow();
 
         log.info("{} Retrieved", todoItem);
 
+        TodoItemDto dto = TodoItemDto.FromTodoItem(todoItem);
         return ResponseEntity.ok()
-                .body(todoItem);
+                .body(dto);
     }
 
     /**
      * Create a new {@link TodoItem} from the payload
      * @param todoItem The {@link TodoItem} to create
-     * @return The created resource
+     * @return The created resource as {@link TodoItemDto}
      */
     @PostMapping
-    public ResponseEntity<TodoItem> post(@RequestBody TodoItem todoItem) {
+    public ResponseEntity<TodoItemDto> post(@RequestBody TodoItem todoItem) {
         TodoItem created = todoItemRepository.save(todoItem);
+        TodoItemDto dto = TodoItemDto.FromTodoItem(created);
 
-        log.info("{} Created", created);
+        log.info("{} Created", dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -82,7 +89,7 @@ public class TodoItemController {
                 .toUri();
 
         return ResponseEntity.created(location)
-                .body(created);
+                .body(dto);
     }
 
     /**
