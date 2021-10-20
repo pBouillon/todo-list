@@ -18,6 +18,11 @@ import java.util.Collections;
 public class SpringFoxConfiguration {
 
     /**
+     * Package in which the controllers are defined
+     */
+    private final static String controllersPackage = "io.pbouillon.todolist.presentation.controllers";
+
+    /**
      * Expose controllers and endpoints to be displayed by Swagger
      * @return The associated Java Bean
      */
@@ -25,9 +30,10 @@ public class SpringFoxConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage(controllersPackage))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .apiInfo(apiInfo());
     }
 
     /**
