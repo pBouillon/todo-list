@@ -9,10 +9,12 @@ import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.application.items.services.TodoItemService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings({"unchecked", "ClassCanBeRecord"})
+@Log4j2
 @Service
 public class TodoItemDispatcher implements Dispatcher {
 
@@ -25,6 +27,8 @@ public class TodoItemDispatcher implements Dispatcher {
 
     @Override
     public <TReturned> TReturned handle(CqrsOperation<TReturned> operation) {
+        log.info("Handling incoming operation: {}", operation);
+
         return operation instanceof Command
             ? handleCommand((Command<TReturned>) operation)
             : handleQuery((Query<TReturned>) operation);
