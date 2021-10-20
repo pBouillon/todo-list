@@ -12,9 +12,9 @@ Simple and unambitious TODO list API
 ### Librairies
 
 - API documentation with **SpringFox**
-- String utilities with **StringUtils**
 - Java utilities with **Lombok**
 - Logging with **Log4j2**
+- Testing with **AssertJ**, **Junit5** and ***Mockito**
 
 ### Infrastructure
 

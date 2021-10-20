@@ -62,13 +62,6 @@
 			<version>3.0.0</version>
 		</dependency>
 
-		<!-- StringUtils -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
-		</dependency>
-
 		<!-- Log4j2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
