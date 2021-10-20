@@ -21,12 +21,12 @@ public class TodoItem {
      * The item's id in the persisted storage
      */
     @Id
-    private String id = "";
+    private String id;
 
     /**
      * The main header of the task
      */
-    private String title = "";
+    private String title;
 
     /**
      * A longer description or additional information about the task (can be null)
