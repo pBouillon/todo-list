@@ -3,10 +3,9 @@ package io.pbouillon.todolist.infrastructure.mappers;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,14 +19,20 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit test suite for the {@link TodoItemMapper}
  * @see TodoItemMapper
  */
-@SpringBootTest(classes = { TodoItemMapperImpl.class })
 public class TodoItemMapperTest {
 
     /**
      * The system under test for those units
      */
-    @Autowired
     private TodoItemMapper mapper;
+
+    /**
+     * Initialize the SUT (system under test) before each test
+     */
+    @BeforeEach
+    private void initializeSystemUnderTest() {
+        mapper = new TodoItemMapperImpl();
+    }
 
     /**
      * Utility method creating a simple {@link TodoItem}
