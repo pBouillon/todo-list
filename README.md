@@ -14,7 +14,7 @@ Simple and unambitious TODO list API
 - API documentation with **SpringFox**
 - Java utilities with **Lombok**
 - Logging with **Log4j2**
-- Testing with **AssertJ**, **Junit5** and ***Mockito**
+- Testing with **AssertJ**, **Junit5** and **Mockito**
 
 ### Infrastructure
 
