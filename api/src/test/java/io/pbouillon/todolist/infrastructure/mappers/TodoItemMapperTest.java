@@ -1,8 +1,8 @@
 package io.pbouillon.todolist.infrastructure.mappers;
 
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
-import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
+import io.pbouillon.todolist.domain.entities.TodoItem;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

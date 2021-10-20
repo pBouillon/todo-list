@@ -2,10 +2,10 @@ package io.pbouillon.todolist.presentation.controllers.items;
 
 import io.pbouillon.todolist.application.commons.cqrs.Query;
 import io.pbouillon.todolist.application.items.TodoItemDispatcher;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
