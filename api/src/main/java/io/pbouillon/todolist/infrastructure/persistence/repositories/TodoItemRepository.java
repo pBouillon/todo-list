@@ -6,5 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 /**
  * Repository to access the persisted {@link TodoItem} entities
  */
-public interface TodoItemRepository extends MongoRepository<TodoItem, String> {
-}
+public interface TodoItemRepository extends MongoRepository<TodoItem, String> { }

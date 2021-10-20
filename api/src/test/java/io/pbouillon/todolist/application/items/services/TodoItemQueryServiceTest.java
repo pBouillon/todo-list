@@ -13,12 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -79,11 +80,17 @@ public class TodoItemQueryServiceTest {
     @Test
     @DisplayName("Given a GetTodoItemsQuery, when retrieving the items, then they should have been retrieved")
     public void givenAGetTodoItemsQuery_WhenRetrievingTheItems_ThenTheyShouldHaveBeenRetrieved() {
-        Mockito.when(todoItemRepository.findAll())
-                .thenReturn(new ArrayList<>());
+        List<TodoItem> items = List.of(
+                new TodoItem(),
+                new TodoItem(),
+                new TodoItem()
+        );
 
-        Mockito.when(todoItemMapper.toDtos(anyList()))
-                .thenReturn(new ArrayList<>());
+        Mockito.when(todoItemRepository.findAll(any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(items));
+
+        Mockito.when(todoItemMapper.toDto(isA(TodoItem.class)))
+                .thenReturn(new TodoItemDto());
 
         GetTodoItemsQuery query = new GetTodoItemsQuery();
 
@@ -91,9 +98,9 @@ public class TodoItemQueryServiceTest {
         todoItemService.getTodoItems(query);
 
         verify(todoItemRepository, times(1))
-                .findAll();
+                .findAll(any(PageRequest.class));
 
-        verify(todoItemMapper, times(1))
-                .toDtos(anyList());
+        verify(todoItemMapper, times(items.size()))
+                .toDto(isA(TodoItem.class));
     }
 }

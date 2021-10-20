@@ -5,8 +5,7 @@ import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * The service in charge of handling the {@link Query} regarding the {@link TodoItem}s
@@ -30,6 +29,6 @@ public interface TodoItemQueryService {
      * @param query The associated CQRS query
      * @return The fetched {@link TodoItem}s, as a list of {@link TodoItemDto}s
      */
-    List<TodoItemDto> getTodoItems(GetTodoItemsQuery query);
+    Page<TodoItemDto> getTodoItems(GetTodoItemsQuery query);
 
 }

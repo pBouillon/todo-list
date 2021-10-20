@@ -11,9 +11,8 @@ import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @SuppressWarnings("ClassCanBeRecord")
 @Log4j2
@@ -74,7 +73,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     public TodoItemDto getTodoItem(GetTodoItemQuery query) {
         TodoItem item = todoItemRepository.findById(query.id()).orElseThrow();
 
-        log.info("Retrieved {} from {}", item, query);
+        log.info("Retrieved {}", item);
 
         return todoItemMapper.toDto(item);
     }
@@ -83,12 +82,12 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
      * {@inheritDoc}
      */
     @Override
-    public List<TodoItemDto> getTodoItems(GetTodoItemsQuery query) {
-        List<TodoItem> items = todoItemRepository.findAll();
+    public Page<TodoItemDto> getTodoItems(GetTodoItemsQuery query) {
+        Page<TodoItem> items = todoItemRepository.findAll(query.getPageRequest());
 
-        log.info("Retrieved {} todo items", items.size());
+        log.info("Retrieved {} todo items across {} pages", items.getNumberOfElements(), items.getTotalPages());
 
-        return todoItemMapper.toDtos(items);
+        return items.map(todoItemMapper::toDto);
     }
 
 }
