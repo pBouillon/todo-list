@@ -1,10 +1,13 @@
 package io.pbouillon.todolist.presentation.controllers.items;
 
+import io.pbouillon.todolist.application.commons.cqrs.Query;
+import io.pbouillon.todolist.application.items.TodoItemDispatcher;
+import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
+import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
-import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
-import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,12 +27,11 @@ public class TodoItemReadController extends TodoItemController {
 
     /**
      * Controller's default constructor
-     * @param repository Data access object to interact with the persisted {@link TodoItem} entities
-     * @param mapper {@link TodoItem} mapper
+     * @param todoItemDispatcher The service in charge of handling the {@link Query} regarding the {@link TodoItem}s
      */
     @Autowired
-    public TodoItemReadController(TodoItemRepository repository, TodoItemMapper mapper) {
-        super (repository, mapper);
+    public TodoItemReadController(TodoItemDispatcher todoItemDispatcher) {
+        super (todoItemDispatcher);
     }
 
     /**
@@ -38,10 +40,8 @@ public class TodoItemReadController extends TodoItemController {
      */
     @GetMapping
     public ResponseEntity<List<TodoItemDto>> getTodoItems() {
-        List<TodoItem> items = todoItemRepository.findAll();
-        log.info("Retrieved {} todo items", items.size());
+        List<TodoItemDto> todoItems = todoItemDispatcher.handle(new GetTodoItemsQuery());
 
-        List<TodoItemDto> todoItems = todoItemMapper.toDtos(items);
         return ResponseEntity.ok()
                 .body(todoItems);
     }
@@ -51,11 +51,11 @@ public class TodoItemReadController extends TodoItemController {
      * @return The serialized {@link TodoItem} as {@link TodoItemDto}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TodoItemDto> getTodoItem(@PathVariable String id) {
-        TodoItem todoItem = todoItemRepository.findById(id).orElseThrow();
-        log.info("{} Retrieved", todoItem);
+    public ResponseEntity<TodoItemDto> getTodoItem(
+            @ApiParam(value = "Id of the task to retrieve")
+            @PathVariable String id) {
+        TodoItemDto dto = todoItemDispatcher.handle(new GetTodoItemQuery(id));
 
-        TodoItemDto dto = todoItemMapper.toDto(todoItem);
         return ResponseEntity.ok()
                 .body(dto);
     }

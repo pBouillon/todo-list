@@ -1,7 +1,8 @@
 package io.pbouillon.todolist.infrastructure.mappers;
 
+import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,6 +49,39 @@ public class TodoItemMapperTest {
         item.setDone(false);
 
         return item;
+    }
+
+    /**
+     * Utility method creating a simple {@link CreateTodoItemCommand}
+     * @return A new unfinished {@link CreateTodoItemCommand}
+     */
+    private static CreateTodoItemCommand createCreateTodoItemCommand() {
+        return new CreateTodoItemCommand(
+                "title-" + UUID.randomUUID(),
+                "description-" + UUID.randomUUID(),
+                false);
+    }
+
+    @Test
+    @DisplayName("Given a CreateTodoItemCommand, when converting it to an item, then it should have the same properties")
+    public void givenACreateTodoItemCommand_WhenConvertingItToAnItem_ThenItShouldHaveTheSameProperties() {
+        CreateTodoItemCommand command = createCreateTodoItemCommand();
+
+        TodoItem item = mapper.fromCommand(command);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(item.getTitle())
+                    .as("Task's title")
+                    .isEqualTo(command.title());
+
+            softly.assertThat(item.getCommentary())
+                    .as("Task's description (nullable)")
+                    .isEqualTo(command.commentary());
+
+            softly.assertThat(item.isDone())
+                    .as("Completeness")
+                    .isEqualTo(command.isDone());
+        });
     }
 
     @Test

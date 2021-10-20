@@ -1,9 +1,13 @@
 package io.pbouillon.todolist.presentation.controllers.items;
 
+import io.pbouillon.todolist.application.commons.cqrs.Query;
+import io.pbouillon.todolist.application.items.TodoItemDispatcher;
+import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
-import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.swagger.annotations.Api;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +26,21 @@ public class TodoItemWriteController extends TodoItemController {
 
     /**
      * Controller's default constructor
-     * @param repository Data access object to interact with the persisted {@link TodoItem} entities
-     * @param mapper {@link TodoItem} mapper
+     * @param todoItemDispatcher The service in charge of handling the {@link Query} regarding the {@link TodoItem}s
      */
     @Autowired
-    public TodoItemWriteController(TodoItemRepository repository, TodoItemMapper mapper) {
-        super (repository, mapper);
+    public TodoItemWriteController(TodoItemDispatcher todoItemDispatcher) {
+        super (todoItemDispatcher);
     }
 
     /**
      * Create a new {@link TodoItem} from the payload
-     * @param todoItem The {@link TodoItem} to create
+     * @param command The {@link TodoItem} to create
      * @return The created resource as {@link TodoItemDto}
      */
     @PostMapping
-    public ResponseEntity<TodoItemDto> post(@RequestBody TodoItem todoItem) {
-        TodoItem created = todoItemRepository.save(todoItem);
-        log.info("{} Created", created);
+    public ResponseEntity<TodoItemDto> post(@RequestBody CreateTodoItemCommand command) {
+        TodoItemDto created = todoItemDispatcher.handle(command);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -46,9 +48,8 @@ public class TodoItemWriteController extends TodoItemController {
                 .buildAndExpand(created.getId())
                 .toUri();
 
-        TodoItemDto dto = todoItemMapper.toDto(created);
         return ResponseEntity.created(location)
-                .body(dto);
+                .body(created);
     }
 
     /**
@@ -58,9 +59,8 @@ public class TodoItemWriteController extends TodoItemController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeTodoItem(@PathVariable String id) {
-        TodoItem todoItem = todoItemRepository.findById(id).orElseThrow();
-        todoItemRepository.delete(todoItem);
-        log.info("{} Deleted", todoItem);
+        DeleteTodoItemCommand command = new DeleteTodoItemCommand(id);
+        todoItemDispatcher.handle(command);
 
         return ResponseEntity.noContent().build();
     }

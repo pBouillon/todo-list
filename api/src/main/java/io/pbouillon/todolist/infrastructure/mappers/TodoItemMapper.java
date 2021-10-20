@@ -1,7 +1,8 @@
 package io.pbouillon.todolist.infrastructure.mappers;
 
+import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-import io.pbouillon.todolist.presentation.dtos.TodoItemDto;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -11,6 +12,13 @@ import java.util.List;
  */
 @Mapper
 public interface TodoItemMapper {
+
+    /**
+     * Convert a {@link CreateTodoItemCommand} to a {@link TodoItem}
+     * @param command The {@link CreateTodoItemCommand} to map
+     * @return Its associated {@link TodoItem}
+     */
+    TodoItem fromCommand(CreateTodoItemCommand command);
 
     /**
      * Convert a {@link TodoItem} to a DTO

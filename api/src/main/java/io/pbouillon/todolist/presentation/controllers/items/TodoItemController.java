@@ -1,8 +1,8 @@
 package io.pbouillon.todolist.presentation.controllers.items;
 
+import io.pbouillon.todolist.application.commons.Dispatcher;
+import io.pbouillon.todolist.application.commons.cqrs.Query;
 import io.pbouillon.todolist.domain.entities.TodoItem;
-import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
-import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -11,13 +11,8 @@ public abstract class TodoItemController {
     protected static final String TAG = "TodoItem";
 
     /**
-     * Data access object to interact with the persisted {@link TodoItem} entities
+     * The service in charge of handling the {@link Query} regarding the {@link TodoItem}s
      */
-    protected final  TodoItemRepository todoItemRepository;
-
-    /**
-     * {@link TodoItem} mapper
-     */
-    protected final  TodoItemMapper todoItemMapper;
+    protected final Dispatcher todoItemDispatcher;
 
 }

@@ -1,4 +1,4 @@
-package io.pbouillon.todolist.presentation.dtos;
+package io.pbouillon.todolist.application.items.dtos;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
