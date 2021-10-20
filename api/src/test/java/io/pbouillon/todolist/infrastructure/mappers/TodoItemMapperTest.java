@@ -23,19 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TodoItemMapperTest {
 
     /**
-     * The system under test for those units
-     */
-    private TodoItemMapper mapper;
-
-    /**
-     * Initialize the SUT (system under test) before each test
-     */
-    @BeforeEach
-    private void initializeSystemUnderTest() {
-        mapper = new TodoItemMapperImpl();
-    }
-
-    /**
      * Utility method creating a simple {@link TodoItem}
      * @return A new unfinished {@link TodoItemMapper} created at this instant
      */
@@ -67,6 +54,7 @@ public class TodoItemMapperTest {
     public void givenACreateTodoItemCommand_WhenConvertingItToAnItem_ThenItShouldHaveTheSameProperties() {
         CreateTodoItemCommand command = createCreateTodoItemCommand();
 
+        TodoItemMapper mapper = new TodoItemMapperImpl();
         TodoItem item = mapper.fromCommand(command);
 
         SoftAssertions.assertSoftly(softly -> {
@@ -89,6 +77,7 @@ public class TodoItemMapperTest {
     public void givenAnItem_WhenConvertingItToADto_ThenItShouldHaveTheSameProperties() {
         TodoItem original = createItem();
 
+        TodoItemMapper mapper = new TodoItemMapperImpl();
         TodoItemDto dto = mapper.toDto(original);
 
         SoftAssertions.assertSoftly(softly -> {
@@ -122,6 +111,7 @@ public class TodoItemMapperTest {
                 .mapToObj(el -> createItem())
                 .collect(Collectors.toList());
 
+        TodoItemMapper mapper = new TodoItemMapperImpl();
         List<TodoItemDto> dtos = mapper.toDtos(originals);
 
         assertThat(dtos).hasSameSizeAs(originals);

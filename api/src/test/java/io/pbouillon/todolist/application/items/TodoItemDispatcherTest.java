@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -35,62 +35,65 @@ public class TodoItemDispatcherTest {
     @Test
     @DisplayName("Given a CreateTodoItemCommand, when dispatching it, then the correct method should have been called")
     public void givenACreateTodoItemCommand_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
+        Mockito.when(todoItemService.createTodoItem(isA(CreateTodoItemCommand.class)))
+                .thenReturn(null);
+
         CreateTodoItemCommand command = new CreateTodoItemCommand(
                 "title-" + UUID.randomUUID(),
                 "description-" + UUID.randomUUID(),
                 false
         );
 
-        Mockito.when(todoItemService.createTodoItem(any(CreateTodoItemCommand.class)))
-                .thenReturn(null);
-
         Dispatcher dispatcher = new TodoItemDispatcher(todoItemService);
         dispatcher.handle(command);
 
         verify(todoItemService, times(1))
-                .createTodoItem(any(CreateTodoItemCommand.class));
+                .createTodoItem(isA(CreateTodoItemCommand.class));
     }
 
     @Test
     @DisplayName("Given a DeleteTodoItemCommand, when dispatching it, then the correct method should have been called")
     public void givenADeleteTodoItemCommand_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
-        DeleteTodoItemCommand command = new DeleteTodoItemCommand("id-" + UUID.randomUUID());
-        Mockito.when(todoItemService.deleteTodoItem(any(DeleteTodoItemCommand.class)))
+        Mockito.when(todoItemService.deleteTodoItem(isA(DeleteTodoItemCommand.class)))
                 .thenReturn(null);
+
+        DeleteTodoItemCommand command = new DeleteTodoItemCommand("id-" + UUID.randomUUID());
 
         Dispatcher dispatcher = new TodoItemDispatcher(todoItemService);
         dispatcher.handle(command);
 
         verify(todoItemService, times(1))
-                .deleteTodoItem(any(DeleteTodoItemCommand.class));
+                .deleteTodoItem(isA(DeleteTodoItemCommand.class));
     }
 
     @Test
     @DisplayName("Given a GetTodoItemQuery, when dispatching it, then the correct method should have been called")
     public void givenAGetTodoItemQuery_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
-        GetTodoItemQuery query = new GetTodoItemQuery("id-" + UUID.randomUUID());
-        Mockito.when(todoItemService.getTodoItem(any(GetTodoItemQuery.class)))
+        Mockito.when(todoItemService.getTodoItem(isA(GetTodoItemQuery.class)))
                 .thenReturn(null);
+
+        GetTodoItemQuery query = new GetTodoItemQuery("id-" + UUID.randomUUID());
 
         Dispatcher dispatcher = new TodoItemDispatcher(todoItemService);
         dispatcher.handle(query);
 
         verify(todoItemService, times(1))
-                .getTodoItem(any(GetTodoItemQuery.class));
+                .getTodoItem(isA(GetTodoItemQuery.class));
     }
 
     @Test
     @DisplayName("Given a GetTodoItemsQuery, when dispatching it, then the correct method should have been called")
     public void givenAGetTodoItemsQuery_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
-        GetTodoItemsQuery query = new GetTodoItemsQuery();
-        Mockito.when(todoItemService.getTodoItems(any(GetTodoItemsQuery.class)))
+        Mockito.when(todoItemService.getTodoItems(isA(GetTodoItemsQuery.class)))
                 .thenReturn(null);
+
+        GetTodoItemsQuery query = new GetTodoItemsQuery();
 
         Dispatcher dispatcher = new TodoItemDispatcher(todoItemService);
         dispatcher.handle(query);
 
         verify(todoItemService, times(1))
-                .getTodoItems(any(GetTodoItemsQuery.class));
+                .getTodoItems(isA(GetTodoItemsQuery.class));
     }
 
 }
