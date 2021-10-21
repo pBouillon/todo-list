@@ -1,6 +1,5 @@
 package io.pbouillon.todolist.application.items.services;
 
-import io.pbouillon.todolist.application.commons.cqrs.Unit;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
@@ -61,13 +60,13 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
      */
     @CacheEvict(cacheNames = { "items", "item" }, key = "#command.id()")
     @Override
-    public Unit deleteTodoItem(DeleteTodoItemCommand command) {
+    public Void deleteTodoItem(DeleteTodoItemCommand command) {
         TodoItem todoItem = todoItemRepository.findById(command.id()).orElseThrow();
         todoItemRepository.delete(todoItem);
 
         log.info("{} Deleted", todoItem);
 
-        return new Unit();
+        return null;
     }
 
     /**

@@ -1,7 +1,6 @@
 package io.pbouillon.todolist.application.items.services;
 
 import io.pbouillon.todolist.application.commons.cqrs.Command;
-import io.pbouillon.todolist.application.commons.cqrs.Unit;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
@@ -28,6 +27,6 @@ public interface TodoItemCommandService {
      * Delete a specific {@link TodoItem}
      * @param command The associated {@link DeleteTodoItemCommand}
      */
-    Unit deleteTodoItem(DeleteTodoItemCommand command);
+    Void deleteTodoItem(DeleteTodoItemCommand command);
 
 }
