@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit test suite for the {@link TodoItemDispatcher}
@@ -55,8 +54,9 @@ public class TodoItemDispatcherTest {
     @Test
     @DisplayName("Given a DeleteTodoItemCommand, when dispatching it, then the correct method should have been called")
     public void givenADeleteTodoItemCommand_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
-        Mockito.when(todoItemService.deleteTodoItem(isA(DeleteTodoItemCommand.class)))
-                .thenReturn(null);
+        doNothing()
+                .when(todoItemService)
+                .deleteTodoItem(isA(DeleteTodoItemCommand.class)));
 
         DeleteTodoItemCommand command = new DeleteTodoItemCommand("id-" + UUID.randomUUID());
 
