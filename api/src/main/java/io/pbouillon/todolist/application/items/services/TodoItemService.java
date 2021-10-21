@@ -45,6 +45,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
+    @CacheEvict(cacheNames = { "item" })
     @Override
     public TodoItemDto createTodoItem(CreateTodoItemCommand command) {
         TodoItem item = todoItemMapper.fromCommand(command);
@@ -72,7 +73,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
-    @Cacheable(value = "item", key = "#query.id()")
+    @Cacheable(cacheNames = { "item" }, key = "#query.id()")
     @Override
     public TodoItemDto getTodoItem(GetTodoItemQuery query) {
         TodoItem item = todoItemRepository.findById(query.id()).orElseThrow();
@@ -85,7 +86,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
-    @Cacheable(value = "items")
+    @Cacheable(cacheNames = { "items" }, key = "#query.getPageOffset()-#query.getItemsPerPages()")
     @Override
     public Page<TodoItemDto> getTodoItems(GetTodoItemsQuery query) {
         Page<TodoItem> items = todoItemRepository.findAll(query.getPageRequest());

@@ -34,7 +34,7 @@ public class RedisConfiguration {
                     "items",
                     RedisCacheConfiguration.defaultCacheConfig()
                             .entryTtl(
-                                    Duration.ofHours(Integer.parseInt(itemsCacheEntryTtl))));
+                                    Duration.ofSeconds(Integer.parseInt(itemsCacheEntryTtl))));
 
             builder.withInitialCacheConfigurations(configurationMap);
         };
