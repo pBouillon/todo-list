@@ -11,6 +11,8 @@ import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
+    @CacheEvict(cacheNames = { "items", "item" }, key = "#command.id()")
     @Override
     public Unit deleteTodoItem(DeleteTodoItemCommand command) {
         TodoItem todoItem = todoItemRepository.findById(command.id()).orElseThrow();
@@ -69,6 +72,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
+    @Cacheable(value = "item", key = "#query.id()")
     @Override
     public TodoItemDto getTodoItem(GetTodoItemQuery query) {
         TodoItem item = todoItemRepository.findById(query.id()).orElseThrow();
@@ -81,6 +85,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
+    @Cacheable(value = "items")
     @Override
     public Page<TodoItemDto> getTodoItems(GetTodoItemsQuery query) {
         Page<TodoItem> items = todoItemRepository.findAll(query.getPageRequest());
