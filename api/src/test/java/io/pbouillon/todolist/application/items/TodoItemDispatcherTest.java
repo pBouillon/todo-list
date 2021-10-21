@@ -56,7 +56,7 @@ public class TodoItemDispatcherTest {
     public void givenADeleteTodoItemCommand_WhenDispatchingIt_ThenTheCorrectMethodShouldHaveBeenCalled() {
         doNothing()
                 .when(todoItemService)
-                .deleteTodoItem(isA(DeleteTodoItemCommand.class)));
+                .deleteTodoItem(isA(DeleteTodoItemCommand.class));
 
         DeleteTodoItemCommand command = new DeleteTodoItemCommand("id-" + UUID.randomUUID());
 
