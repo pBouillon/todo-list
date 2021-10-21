@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,7 +64,7 @@ public class TodoItemReadControllerTests {
         Mockito.when(todoItemRepository.findById(anyString()))
                 .thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/todos/1"))
+        mockMvc.perform(get("/api/todos/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
