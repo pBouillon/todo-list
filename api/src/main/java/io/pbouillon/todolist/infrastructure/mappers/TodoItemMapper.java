@@ -4,13 +4,14 @@ import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
 /**
  * {@link TodoItem} mappings to DTO and others
  */
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TodoItemMapper {
 
     /**
@@ -18,6 +19,9 @@ public interface TodoItemMapper {
      * @param command The {@link CreateTodoItemCommand} to map
      * @return Its associated {@link TodoItem}
      */
+    // Generated implementation does map all the properties,
+    // but I suspect that using a record messed with IDEA detection
+    @SuppressWarnings("UnmappedTargetProperties")
     TodoItem fromCommand(CreateTodoItemCommand command);
 
     /**
