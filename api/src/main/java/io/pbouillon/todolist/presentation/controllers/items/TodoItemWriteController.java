@@ -7,6 +7,7 @@ import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,7 +38,9 @@ public class TodoItemWriteController extends TodoItemController {
      * @return The created resource as {@link TodoItemDto}
      */
     @PostMapping
-    public ResponseEntity<TodoItemDto> post(@RequestBody CreateTodoItemCommand command) {
+    public ResponseEntity<TodoItemDto> post(
+            @ApiParam("Payload from which the item will be created")
+            @RequestBody CreateTodoItemCommand command) {
         TodoItemDto created = todoItemDispatcher.handle(command);
 
         URI location = ServletUriComponentsBuilder
@@ -56,7 +59,9 @@ public class TodoItemWriteController extends TodoItemController {
      * @return No content on success
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeTodoItem(@PathVariable String id) {
+    public ResponseEntity<?> removeTodoItem(
+            @ApiParam(value = "Id of the task to delete")
+            @PathVariable String id) {
         DeleteTodoItemCommand command = new DeleteTodoItemCommand(id);
         todoItemDispatcher.handle(command);
 
