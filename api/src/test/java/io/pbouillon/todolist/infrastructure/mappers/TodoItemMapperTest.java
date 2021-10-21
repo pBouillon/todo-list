@@ -3,8 +3,8 @@ package io.pbouillon.todolist.infrastructure.mappers;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
+import io.pbouillon.todolist.domain.enums.Status;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ public class TodoItemMapperTest {
         item.setTitle("title-" + UUID.randomUUID());
         item.setCommentary("description-" + UUID.randomUUID());
         item.setCreatedOn(Instant.now());
-        item.setDone(false);
+        item.setStatus(Status.NotStarted);
 
         return item;
     }
@@ -46,7 +46,7 @@ public class TodoItemMapperTest {
         return new CreateTodoItemCommand(
                 "title-" + UUID.randomUUID(),
                 "description-" + UUID.randomUUID(),
-                false);
+                Status.NotStarted);
     }
 
     @Test
@@ -66,9 +66,9 @@ public class TodoItemMapperTest {
                     .as("Task's description (nullable)")
                     .isEqualTo(command.commentary());
 
-            softly.assertThat(item.isDone())
+            softly.assertThat(item.getStatus())
                     .as("Completeness")
-                    .isEqualTo(command.isDone());
+                    .isEqualTo(command.status());
         });
     }
 
@@ -97,9 +97,9 @@ public class TodoItemMapperTest {
                     .as("Creation date")
                     .isEqualTo(original.getCreatedOn());
 
-            softly.assertThat(dto.isDone())
+            softly.assertThat(dto.getStatus())
                     .as("Completeness")
-                    .isEqualTo(original.isDone());
+                    .isEqualTo(original.getStatus());
         });
     }
 
@@ -137,9 +137,9 @@ public class TodoItemMapperTest {
                         .as("Creation date")
                         .isEqualTo(original.getCreatedOn());
 
-                softly.assertThat(dto.isDone())
+                softly.assertThat(dto.getStatus())
                         .as("Completeness")
-                        .isEqualTo(original.isDone());
+                        .isEqualTo(original.getStatus());
             });
         }
     }

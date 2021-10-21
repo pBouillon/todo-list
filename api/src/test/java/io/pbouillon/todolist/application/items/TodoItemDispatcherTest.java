@@ -6,6 +6,7 @@ import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.application.items.services.TodoItemService;
+import io.pbouillon.todolist.domain.enums.Status;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ public class TodoItemDispatcherTest {
         CreateTodoItemCommand command = new CreateTodoItemCommand(
                 "title-" + UUID.randomUUID(),
                 "description-" + UUID.randomUUID(),
-                false
+                Status.NotStarted
         );
 
         Dispatcher dispatcher = new TodoItemDispatcher(todoItemService);

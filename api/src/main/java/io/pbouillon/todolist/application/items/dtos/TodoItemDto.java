@@ -1,5 +1,6 @@
 package io.pbouillon.todolist.application.items.dtos;
 
+import io.pbouillon.todolist.domain.enums.Status;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class TodoItemDto implements Serializable {
     @ApiModelProperty(notes = "The task's creation date, represented as UTC")
     private Instant createdOn;
 
-    @ApiModelProperty(notes = "Whether this task has been completed or not")
-    private boolean isDone;
+    @ApiModelProperty(notes = "The current item's status")
+    private Status status;
 
 }

@@ -1,5 +1,6 @@
 package io.pbouillon.todolist.domain.entities;
 
+import io.pbouillon.todolist.domain.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,8 +40,8 @@ public class TodoItem {
     private Instant createdOn = Instant.now();
 
     /**
-     * Whether this task has been completed or not
+     * The current item's status
      */
-    private boolean isDone;
+    private Status status = Status.NotStarted;
 
 }

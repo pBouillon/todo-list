@@ -5,6 +5,7 @@ import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
+import io.pbouillon.todolist.domain.enums.Status;
 import io.pbouillon.todolist.infrastructure.mappers.TodoItemMapper;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import org.assertj.core.api.SoftAssertions;
@@ -58,7 +59,7 @@ public class TodoItemCommandServiceTest {
         CreateTodoItemCommand command = new CreateTodoItemCommand(
                 "title-" + UUID.randomUUID(),
                 "description-" + UUID.randomUUID(),
-                false
+                Status.NotStarted
         );
 
         TodoItemCommandService todoItemService = new TodoItemService(todoItemMapper, todoItemRepository);
