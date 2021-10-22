@@ -51,15 +51,15 @@ public class TodoItemWriteControllerTests {
 
         CreateTodoItemCommand command = new CreateTodoItemCommand(
                 "title",
-                "description",
+                "note",
                 Status.NotStarted
         );
 
         String payload = String.format("""
-                { "title": "%s", "commentary": "%s", "status": "%s" }
+                { "title": "%s", "note": "%s", "status": "%s" }
                 """,
                 command.title(),
-                command.commentary(),
+                command.note(),
                 command.status()
         );
 

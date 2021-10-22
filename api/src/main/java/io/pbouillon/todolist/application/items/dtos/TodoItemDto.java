@@ -24,7 +24,7 @@ public class TodoItemDto implements Serializable {
     private String title;
 
     @ApiModelProperty(notes = "A longer description or additional information about the task (can be null)")
-    private String commentary;
+    private String note;
 
     @ApiModelProperty(notes = "The task's creation date, represented as UTC")
     private Instant createdOn;

@@ -11,6 +11,6 @@ import io.pbouillon.todolist.domain.enums.Status;
  */
 public record CreateTodoItemCommand(
         String title,
-        String commentary,
+        String note,
         Status status
 ) implements Command<TodoItemDto> { }

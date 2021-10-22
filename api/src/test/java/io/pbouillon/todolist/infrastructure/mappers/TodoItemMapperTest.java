@@ -31,7 +31,7 @@ public class TodoItemMapperTest {
 
         item.setId("id-" + UUID.randomUUID());
         item.setTitle("title-" + UUID.randomUUID());
-        item.setCommentary("description-" + UUID.randomUUID());
+        item.setNote("description-" + UUID.randomUUID());
         item.setCreatedOn(Instant.now());
         item.setStatus(Status.NotStarted);
 
@@ -62,9 +62,9 @@ public class TodoItemMapperTest {
                     .as("Task's title")
                     .isEqualTo(command.title());
 
-            softly.assertThat(item.getCommentary())
+            softly.assertThat(item.getNote())
                     .as("Task's description (nullable)")
-                    .isEqualTo(command.commentary());
+                    .isEqualTo(command.note());
 
             softly.assertThat(item.getStatus())
                     .as("Completeness")
@@ -89,9 +89,9 @@ public class TodoItemMapperTest {
                     .as("Task's title")
                     .isEqualTo(original.getTitle());
 
-            softly.assertThat(dto.getCommentary())
+            softly.assertThat(dto.getNote())
                     .as("Task's description (nullable)")
-                    .isEqualTo(original.getCommentary());
+                    .isEqualTo(original.getNote());
 
             softly.assertThat(dto.getCreatedOn())
                     .as("Creation date")
@@ -129,9 +129,9 @@ public class TodoItemMapperTest {
                         .as("Task's title")
                         .isEqualTo(original.getTitle());
 
-                softly.assertThat(dto.getCommentary())
+                softly.assertThat(dto.getNote())
                         .as("Task's description (nullable)")
-                        .isEqualTo(original.getCommentary());
+                        .isEqualTo(original.getNote());
 
                 softly.assertThat(dto.getCreatedOn())
                         .as("Creation date")

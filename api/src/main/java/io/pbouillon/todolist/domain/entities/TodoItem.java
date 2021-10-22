@@ -32,7 +32,7 @@ public class TodoItem {
     /**
      * A longer description or additional information about the task (can be null)
      */
-    private String commentary;
+    private String note;
 
     /**
      * The task's creation date, represented as UTC
