@@ -25,13 +25,23 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Unit test suite for the {@link TodoItemReadController}
+ * @see TodoItemReadController
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TodoItemReadControllerTests {
 
+    /**
+     * The mocked {@link TodoItemRepository} to inject into the tested {@link TodoItemRepository} instances
+     */
     @MockBean
     private TodoItemRepository todoItemRepository;
 
+    /**
+     * The HTTP test client calling the controller's endpoints
+     */
     @Autowired
     private MockMvc mockMvc;
 
