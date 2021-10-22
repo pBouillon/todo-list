@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 @Log4j2
 @RestController
@@ -64,7 +63,7 @@ public class TodoItemReadController extends TodoItemController {
     @GetMapping("/{id}")
     public ResponseEntity<TodoItemDto> getTodoItem(
             @ApiParam(value = "Id of the task to retrieve")
-            @NotBlank @PathVariable String id) {
+            @PathVariable String id) {
         TodoItemDto dto = todoItemDispatcher.handle(new GetTodoItemQuery(id));
 
         return ResponseEntity.ok()

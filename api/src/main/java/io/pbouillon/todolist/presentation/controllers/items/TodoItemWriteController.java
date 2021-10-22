@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.net.URI;
 
 @Log4j2
@@ -63,7 +62,7 @@ public class TodoItemWriteController extends TodoItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeTodoItem(
             @ApiParam(value = "Id of the task to delete")
-            @NotBlank @PathVariable String id) {
+            @PathVariable String id) {
         DeleteTodoItemCommand command = new DeleteTodoItemCommand(id);
         todoItemDispatcher.handle(command);
 

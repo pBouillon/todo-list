@@ -8,7 +8,9 @@ import io.pbouillon.todolist.domain.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * {@link CqrsOperation} representing the intent of the creation of a new {@link TodoItem}

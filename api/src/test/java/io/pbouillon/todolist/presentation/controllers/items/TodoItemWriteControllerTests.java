@@ -17,10 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.lang.Math.max;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -44,8 +46,8 @@ public class TodoItemWriteControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Given a todo item, when posting it, then it should have been created")
-    public void givenATodoItem_WhenPostingIt_ThenItShouldHaveBeenCreated() throws Exception {
+    @DisplayName("Given a todo item, when posting it, then it should return an HTTP 201")
+    public void givenATodoItem_WhenPostingIt_ThenItShouldReturnAnHTTP201() throws Exception {
         Mockito.when(todoItemRepository.save(isA(TodoItem.class)))
                 .thenReturn(new TodoItem());
 
@@ -73,8 +75,104 @@ public class TodoItemWriteControllerTests {
     }
 
     @Test
-    @DisplayName("Given an unknown todo item id, when deleting it, then a not found result should be returned")
-    public void givenAnUnknownTodoItemId_whenDeletingIt_thenANotFoundResultShouldBeReturned() throws Exception {
+    @DisplayName("Given a todo item with no title, when posting it, then it should return an HTTP 400")
+    public void givenATodoItemWithNoTitle_WhenPostingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        String payload = String.format("""
+                { "title": "", "note": "%s", "status": "%s" }
+                """,
+                UUID.randomUUID(), Status.NotStarted
+        );
+
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with no status, when posting it, then it should return an HTTP 400")
+    public void givenATodoItemWithNoStatus_WhenPostingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        String payload = String.format("""
+                { "title": "%s", "note": "%s" }
+                """,
+                UUID.randomUUID(), UUID.randomUUID()
+        );
+
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a short title, when posting it, then it should return an HTTP 400")
+    public void givenATodoItemWithAShortTitle_WhenPostingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        String payload = String.format("""
+                { "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                "*".repeat(max(0, TodoItem.TITLE_MIN_LENGTH - 1)),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a long title, when posting it, then it should return an HTTP 400")
+    public void givenATodoItemWithALongTitle_WhenPostingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        String payload = String.format("""
+                { "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                "*".repeat(TodoItem.TITLE_MAX_LENGTH + 1),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a long note, when posting it, then it should return an HTTP 400")
+    public void givenATodoItemWithALongNote_WhenPostingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        String payload = String.format("""
+                { "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                UUID.randomUUID(),
+                "*".repeat(TodoItem.NOTE_MAX_LENGTH + 1),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.note").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given an unknown todo item id, when deleting it, then a not found result should return an HTTP 404")
+    public void givenAnUnknownTodoItemId_WhenDeletingIt_ThenItShouldReturnAnHTTP404() throws Exception {
         Mockito.when(todoItemRepository.findById(anyString()))
                 .thenReturn(Optional.empty());
 
@@ -83,8 +181,8 @@ public class TodoItemWriteControllerTests {
     }
 
     @Test
-    @DisplayName("Given a todo item id, when deleting it, then a no content result should be returned")
-    public void givenATodoItemId_WhenDeletingIt_thenANoContentResultShouldBeReturned() throws Exception {
+    @DisplayName("Given a todo item id, when deleting it, then it should return an HTTP 204")
+    public void givenATodoItemId_WhenDeletingIt_ThenItShouldReturnAnHTTP204() throws Exception {
         Mockito.when(todoItemRepository.findById(anyString()))
                 .thenReturn(Optional.of(new TodoItem()));
 
