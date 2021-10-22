@@ -60,15 +60,15 @@ public class TodoItemMapperTest {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(item.getTitle())
                     .as("Task's title")
-                    .isEqualTo(command.title());
+                    .isEqualTo(command.getTitle());
 
             softly.assertThat(item.getNote())
                     .as("Task's description (nullable)")
-                    .isEqualTo(command.note());
+                    .isEqualTo(command.getNote());
 
             softly.assertThat(item.getStatus())
                     .as("Completeness")
-                    .isEqualTo(command.status());
+                    .isEqualTo(command.getStatus());
         });
     }
 

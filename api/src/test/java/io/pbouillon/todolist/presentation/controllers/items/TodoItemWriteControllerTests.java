@@ -58,9 +58,9 @@ public class TodoItemWriteControllerTests {
         String payload = String.format("""
                 { "title": "%s", "note": "%s", "status": "%s" }
                 """,
-                command.title(),
-                command.note(),
-                command.status()
+                command.getTitle(),
+                command.getNote(),
+                command.getStatus()
         );
 
         mockMvc.perform(post("/api/todos")

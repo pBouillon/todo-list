@@ -19,6 +19,21 @@ import java.time.Instant;
 public class TodoItem {
 
     /**
+     * The minimum length of the title field
+     */
+    public static final int TITLE_MIN_LENGTH = 3;
+
+    /**
+     * The maximum length of the title field
+     */
+    public static final int TITLE_MAX_LENGTH = 64;
+
+    /**
+     * The maximum length of the note field
+     */
+    public static final int NOTE_MAX_LENGTH = 512;
+
+    /**
      * The item's id in the persisted storage
      */
     @Id
@@ -30,7 +45,7 @@ public class TodoItem {
     private String title;
 
     /**
-     * A longer description or additional information about the task (can be null)
+     * A longer description or additional information about the task (can be blank)
      */
     private String note;
 

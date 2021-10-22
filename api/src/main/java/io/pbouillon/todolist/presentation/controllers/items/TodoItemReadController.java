@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 @Log4j2
 @RestController
 @RequestMapping(path = "/api/todos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,10 +42,10 @@ public class TodoItemReadController extends TodoItemController {
     public ResponseEntity<Page<TodoItemDto>> getTodoItems(
             @ApiParam(value = "Number of items to display per page")
             @RequestParam(defaultValue = "" + PageableQuery.ITEMS_PER_PAGE_DEFAULT_VALUE)
-            int itemsPerPages,
+            @Min(0) int itemsPerPages,
             @ApiParam(value = "Offset of the page to retrieve")
             @RequestParam(defaultValue = "" + PageableQuery.FIRST_PAGE_OFFSET)
-            int pageOffset
+            @Min(PageableQuery.FIRST_PAGE_OFFSET) int pageOffset
     ) {
         GetTodoItemsQuery query = new GetTodoItemsQuery();
         query.setItemsPerPages(itemsPerPages);
@@ -61,7 +64,7 @@ public class TodoItemReadController extends TodoItemController {
     @GetMapping("/{id}")
     public ResponseEntity<TodoItemDto> getTodoItem(
             @ApiParam(value = "Id of the task to retrieve")
-            @PathVariable String id) {
+            @NotBlank @PathVariable String id) {
         TodoItemDto dto = todoItemDispatcher.handle(new GetTodoItemQuery(id));
 
         return ResponseEntity.ok()

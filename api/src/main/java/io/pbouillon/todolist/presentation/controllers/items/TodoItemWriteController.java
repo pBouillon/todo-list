@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
 
 @Log4j2
@@ -40,7 +42,7 @@ public class TodoItemWriteController extends TodoItemController {
     @PostMapping
     public ResponseEntity<TodoItemDto> post(
             @ApiParam("Payload from which the item will be created")
-            @RequestBody CreateTodoItemCommand command) {
+            @Valid @RequestBody CreateTodoItemCommand command) {
         TodoItemDto created = todoItemDispatcher.handle(command);
 
         URI location = ServletUriComponentsBuilder
@@ -61,7 +63,7 @@ public class TodoItemWriteController extends TodoItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeTodoItem(
             @ApiParam(value = "Id of the task to delete")
-            @PathVariable String id) {
+            @NotBlank @PathVariable String id) {
         DeleteTodoItemCommand command = new DeleteTodoItemCommand(id);
         todoItemDispatcher.handle(command);
 
