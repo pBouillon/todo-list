@@ -3,6 +3,7 @@ package io.pbouillon.todolist.application.items.services;
 import io.pbouillon.todolist.application.commons.cqrs.Command;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 
@@ -28,5 +29,12 @@ public interface TodoItemCommandService {
      * @param command The associated {@link DeleteTodoItemCommand}
      */
     Void deleteTodoItem(DeleteTodoItemCommand command);
+
+    /**
+     * Replace a specific {@link TodoItem} by the provided payload
+     * @param command The associated {@link ReplaceTodoItemCommand} containing the new values
+     * @return The updated {@link TodoItem}, as a {@link TodoItemDto}
+     */
+    TodoItemDto replaceTodoItem(ReplaceTodoItemCommand command);
 
 }

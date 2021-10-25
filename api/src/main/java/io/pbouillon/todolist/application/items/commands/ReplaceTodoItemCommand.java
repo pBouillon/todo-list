@@ -1,0 +1,47 @@
+package io.pbouillon.todolist.application.items.commands;
+
+import io.pbouillon.todolist.application.commons.cqrs.Command;
+import io.pbouillon.todolist.application.commons.cqrs.CqrsOperation;
+import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
+import io.pbouillon.todolist.domain.entities.TodoItem;
+import io.pbouillon.todolist.domain.enums.Status;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/**
+ * {@link CqrsOperation} representing the intent of the replacement of an existing {@link TodoItem}
+ */
+@Data
+@AllArgsConstructor
+public class ReplaceTodoItemCommand implements Command<TodoItemDto> {
+
+    /**
+     * The task's id
+     */
+    @NotBlank
+    private String id;
+
+    /**
+     * The main header of the task
+     */
+    @NotBlank
+    @Size(min = TodoItem.TITLE_MIN_LENGTH, max = TodoItem.TITLE_MAX_LENGTH)
+    private String title;
+
+    /**
+     * A longer description or additional information about the task (can be blank)
+     */
+    @Size(max = TodoItem.NOTE_MAX_LENGTH)
+    private String note;
+
+    /**
+     * The current item's status
+     */
+    @NotNull
+    private Status status;
+
+}

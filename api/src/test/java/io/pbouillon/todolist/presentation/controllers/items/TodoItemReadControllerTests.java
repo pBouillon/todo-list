@@ -46,8 +46,8 @@ public class TodoItemReadControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Given some todo items, when querying all items, then a paginated list should be returned")
-    public void givenSomeTodoItems_WhenQueryingAllItems_ThenAPaginatedListShouldBeReturned() throws Exception {
+    @DisplayName("Given some todo items, when querying all items, then it should return an HTTP 200")
+    public void givenSomeTodoItems_WhenQueryingAllItems_ThenItShouldReturnAnHTTP200() throws Exception {
         List<TodoItem> items = List.of(
                 new TodoItem(),
                 new TodoItem(),
@@ -69,8 +69,8 @@ public class TodoItemReadControllerTests {
     }
 
     @Test
-    @DisplayName("Given an unknown todo item id, when querying it, then a not found result should be returned")
-    public void givenAnUnknownTodoItemId_WhenQueryingIt_ThenANotFoundResultShouldBeReturned() throws Exception {
+    @DisplayName("Given an unknown todo item id, when querying it, then it should return an HTTP 404")
+    public void givenAnUnknownTodoItemId_WhenQueryingIt_ThenItShouldReturnAnHTTP404() throws Exception {
         Mockito.when(todoItemRepository.findById(anyString()))
                 .thenReturn(Optional.empty());
 
@@ -79,8 +79,8 @@ public class TodoItemReadControllerTests {
     }
 
     @Test
-    @DisplayName("Given a todo item id, when querying it, then it should be returned")
-    public void givenATodoItemId_WhenQueryingIt_ThenItShouldBeReturned() throws Exception {
+    @DisplayName("Given a todo item id, when querying it, then it should return an HTTP 200")
+    public void givenATodoItemId_WhenQueryingIt_ThenItShouldReturnAnHTTP200() throws Exception {
         TodoItem item = new TodoItem();
         item.setId(UUID.randomUUID().toString());
 

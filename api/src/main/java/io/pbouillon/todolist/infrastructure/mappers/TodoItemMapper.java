@@ -1,9 +1,11 @@
 package io.pbouillon.todolist.infrastructure.mappers;
 
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -37,5 +39,12 @@ public interface TodoItemMapper {
      * @return Their associated DTOs
      */
     List<TodoItemDto> toDtos(List<TodoItem> todoItems);
+
+    /**
+     * Replace the content of an existing {@link TodoItem} with the content of the {@link ReplaceTodoItemCommand}
+     * @param todoItem The item whose content is to be replaced
+     * @param command The command from which the values will be replaced
+     */
+    TodoItem updateFromCommand(@MappingTarget TodoItem todoItem, ReplaceTodoItemCommand command);
 
 }

@@ -4,6 +4,7 @@ import io.pbouillon.todolist.application.commons.cqrs.Query;
 import io.pbouillon.todolist.application.items.TodoItemDispatcher;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.swagger.annotations.Api;
@@ -39,7 +40,7 @@ public class TodoItemWriteController extends TodoItemController {
      * @return The created resource as {@link TodoItemDto}
      */
     @PostMapping
-    public ResponseEntity<TodoItemDto> post(
+    public ResponseEntity<TodoItemDto> createTodoItem(
             @ApiParam("Payload from which the item will be created")
             @Valid @RequestBody CreateTodoItemCommand command) {
         TodoItemDto created = todoItemDispatcher.handle(command);
@@ -54,6 +55,19 @@ public class TodoItemWriteController extends TodoItemController {
                 .body(created);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TodoItemDto> replaceTodoItem(
+            @ApiParam(value = "Id of the item to replace")
+            @PathVariable String id,
+            @Valid @RequestBody ReplaceTodoItemCommand command) {
+        if (!id.equals(command.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        TodoItemDto replaced = todoItemDispatcher.handle(command);
+        return ResponseEntity.ok(replaced);
+    }
+
     /**
      * Delete a {@link TodoItem}
      * @param id The id of the resource to delete
@@ -61,7 +75,7 @@ public class TodoItemWriteController extends TodoItemController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeTodoItem(
-            @ApiParam(value = "Id of the task to delete")
+            @ApiParam(value = "Id of the item to delete")
             @PathVariable String id) {
         DeleteTodoItemCommand command = new DeleteTodoItemCommand(id);
         todoItemDispatcher.handle(command);

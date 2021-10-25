@@ -20,8 +20,7 @@ import java.util.UUID;
 import static java.lang.Math.max;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -192,6 +191,159 @@ public class TodoItemWriteControllerTests {
 
         mockMvc.perform(delete("/api/todos/" + UUID.randomUUID()))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Given an unknown todo item id, when replacing it, then a not found result should return an HTTP 404")
+    public void givenAnUnknownTodoItemId_WhenReplacingIt_ThenItShouldReturnAnHTTP404() throws Exception {
+        Mockito.when(todoItemRepository.findById(anyString()))
+                .thenReturn(Optional.empty());
+
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                id,
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Given a todo item id and a replace command with a mismatching id, when replacing it, then a not found result should return an HTTP 400")
+    public void givenATodoItemIdAndAReplaceCommandWithAMismatching_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+        final String mismatchingId = id + "-";
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                id,
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + mismatchingId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Given a todo item with no title, when replacing it, then it should return an HTTP 400")
+    public void givenATodoItemWithNoTitle_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "", "note": "%s", "status": "%s" }
+                """,
+                id, UUID.randomUUID(), Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with no status, when replacing it, then it should return an HTTP 400")
+    public void givenATodoItemWithNoStatus_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s" }
+                """,
+                id, UUID.randomUUID(), UUID.randomUUID()
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a short title, when replacing it, then it should return an HTTP 400")
+    public void givenATodoItemWithAShortTitle_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                id,
+                "*".repeat(max(0, TodoItem.TITLE_MIN_LENGTH - 1)),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a long title, when replacing it, then it should return an HTTP 400")
+    public void givenATodoItemWithALongTitle_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                id,
+                "*".repeat(TodoItem.TITLE_MAX_LENGTH + 1),
+                UUID.randomUUID(),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.title").exists()
+                );
+    }
+
+    @Test
+    @DisplayName("Given a todo item with a long note, when replacing it, then it should return an HTTP 400")
+    public void givenATodoItemWithALongNote_WhenReplacingIt_ThenItShouldReturnAnHTTP400() throws Exception {
+        final String id = UUID.randomUUID().toString();
+
+        String payload = String.format("""
+                { "id": "%s", "title": "%s", "note": "%s", "status": "%s" }
+                """,
+                id,
+                UUID.randomUUID(),
+                "*".repeat(TodoItem.NOTE_MAX_LENGTH + 1),
+                Status.NotStarted
+        );
+
+        mockMvc.perform(put("/api/todos/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.note").exists()
+                );
     }
 
 }

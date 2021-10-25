@@ -2,6 +2,7 @@ package io.pbouillon.todolist.application.items.services;
 
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
@@ -93,6 +94,22 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
         log.info("Retrieved {} todo items across {} pages", items.getNumberOfElements(), items.getTotalPages());
 
         return items.map(todoItemMapper::toDto);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @CacheEvict(cacheNames = { "items", "item" }, key = "#command.id()")
+    @Override
+    public TodoItemDto replaceTodoItem(ReplaceTodoItemCommand command) {
+        TodoItem item = todoItemRepository.findById(command.getId()).orElseThrow();
+
+        log.info("Updating the content of {} from the {}", item, command);
+
+        TodoItem updated = todoItemMapper.updateFromCommand(item, command);
+        todoItemRepository.save(updated);
+
+        return todoItemMapper.toDto(updated);
     }
 
 }

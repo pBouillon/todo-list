@@ -1,6 +1,7 @@
 package io.pbouillon.todolist.infrastructure.mappers;
 
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.domain.enums.Status;
@@ -44,6 +45,18 @@ public class TodoItemMapperTest {
      */
     private static CreateTodoItemCommand createCreateTodoItemCommand() {
         return new CreateTodoItemCommand(
+                "title-" + UUID.randomUUID(),
+                "description-" + UUID.randomUUID(),
+                Status.NotStarted);
+    }
+
+    /**
+     * Utility method creating a simple {@link ReplaceTodoItemCommand}
+     * @return A new {@link ReplaceTodoItemCommand}
+     */
+    private static ReplaceTodoItemCommand createReplaceTodoItemCommand() {
+        return new ReplaceTodoItemCommand(
+                "id-" + UUID.randomUUID(),
                 "title-" + UUID.randomUUID(),
                 "description-" + UUID.randomUUID(),
                 Status.NotStarted);
@@ -142,6 +155,38 @@ public class TodoItemMapperTest {
                         .isEqualTo(original.getStatus());
             });
         }
+    }
+
+    @Test
+    @DisplayName("Given n item, when replacing its content from a ReplaceTodoItemCommand, then its values should have been updated")
+    public void givenAnItem_WhenReplacingItsContentFromAReplaceTodoItemCommand_ThenItsValuesShouldHaveBeenUpdated() {
+        TodoItem original = createItem();
+        ReplaceTodoItemCommand command = createReplaceTodoItemCommand();
+
+        TodoItemMapper mapper = new TodoItemMapperImpl();
+        TodoItem updated = mapper.updateFromCommand(original, command);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(updated.getId())
+                    .as("Identifier")
+                    .isEqualTo(command.getId());
+
+            softly.assertThat(updated.getTitle())
+                    .as("Task's title")
+                    .isEqualTo(command.getTitle());
+
+            softly.assertThat(updated.getNote())
+                    .as("Task's description (nullable)")
+                    .isEqualTo(command.getNote());
+
+            softly.assertThat(updated.getCreatedOn())
+                    .as("Creation date")
+                    .isEqualTo(original.getCreatedOn());
+
+            softly.assertThat(updated.getStatus())
+                    .as("Completeness")
+                    .isEqualTo(command.getStatus());
+        });
     }
 
 }

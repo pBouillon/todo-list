@@ -6,6 +6,7 @@ import io.pbouillon.todolist.application.commons.cqrs.CqrsOperation;
 import io.pbouillon.todolist.application.commons.cqrs.Query;
 import io.pbouillon.todolist.application.items.commands.CreateTodoItemCommand;
 import io.pbouillon.todolist.application.items.commands.DeleteTodoItemCommand;
+import io.pbouillon.todolist.application.items.commands.ReplaceTodoItemCommand;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemQuery;
 import io.pbouillon.todolist.application.items.queries.GetTodoItemsQuery;
 import io.pbouillon.todolist.application.items.services.TodoItemService;
@@ -47,6 +48,10 @@ public class TodoItemDispatcher implements Dispatcher {
 
         if (command instanceof DeleteTodoItemCommand deleteTodoItemCommand) {
             return (TReturned) todoItemService.deleteTodoItem(deleteTodoItemCommand);
+        }
+
+        if (command instanceof ReplaceTodoItemCommand replaceTodoItemCommand) {
+            return (TReturned) todoItemService.replaceTodoItem(replaceTodoItemCommand);
         }
 
         return null;
