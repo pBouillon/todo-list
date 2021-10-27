@@ -1,4 +1,4 @@
-package io.pbouillon.todolist.application.commons;
+package io.pbouillon.todolist.application.commons.cqrs;
 
 import io.pbouillon.todolist.application.commons.cqrs.Query;
 import lombok.Data;
