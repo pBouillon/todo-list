@@ -21,11 +21,13 @@ principles (such as CQRS, hexagonal architecture, etc.)
 - Java utilities with **Lombok**
 - Logging with **Log4j2**
 - Testing with **AssertJ**, **Junit5** and **Mockito**
+- Metrics with **Micrometer** and **Prometheus**
 
 ### Infrastructure
 
 - Persistence with **MongoDB** (along with **mongo-express**)
 - Containerization with **Docker**
+- Visualization with **Grafana**
 
 ## Architecture overview
 
