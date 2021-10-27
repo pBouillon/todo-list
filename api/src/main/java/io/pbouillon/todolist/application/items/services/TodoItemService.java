@@ -99,7 +99,7 @@ public class TodoItemService implements TodoItemCommandService, TodoItemQuerySer
     /**
      * {@inheritDoc}
      */
-    @CacheEvict(cacheNames = { "items", "item" }, key = "#command.id()")
+    @CacheEvict(cacheNames = { "items", "item" }, key = "#command.getId()")
     @Override
     public TodoItemDto replaceTodoItem(ReplaceTodoItemCommand command) {
         TodoItem item = todoItemRepository.findById(command.getId()).orElseThrow();
