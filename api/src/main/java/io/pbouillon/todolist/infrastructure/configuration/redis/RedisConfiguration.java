@@ -1,4 +1,4 @@
-package io.pbouillon.todolist.infrastructure.redis;
+package io.pbouillon.todolist.infrastructure.configuration.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
@@ -10,6 +10,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Configuration class to configure the Redis cache
+ */
 @Configuration
 public class RedisConfiguration {
 

@@ -1,4 +1,4 @@
-package io.pbouillon.todolist.infrastructure.springfox;
+package io.pbouillon.todolist.infrastructure.configuration.springfox;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
