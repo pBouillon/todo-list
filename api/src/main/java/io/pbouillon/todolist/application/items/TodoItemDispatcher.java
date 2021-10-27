@@ -1,5 +1,6 @@
 package io.pbouillon.todolist.application.items;
 
+import io.micrometer.core.annotation.Timed;
 import io.pbouillon.todolist.application.commons.Dispatcher;
 import io.pbouillon.todolist.application.commons.cqrs.Command;
 import io.pbouillon.todolist.application.commons.cqrs.CqrsOperation;
@@ -26,6 +27,7 @@ public class TodoItemDispatcher implements Dispatcher {
         this.todoItemService = todoItemService;
     }
 
+    @Timed(value = "item.dispatcher.time", description = "Time taken to handle an operation on the item resource")
     @Override
     public <TReturned> TReturned handle(CqrsOperation<TReturned> operation) {
         log.info("Handling incoming operation: {}", operation);
@@ -41,6 +43,7 @@ public class TodoItemDispatcher implements Dispatcher {
      * @param <TReturned> The return type of the command
      * @return The result of the command's handling
      */
+    @Timed(value = "item.dispatcher.time.command", description = "Time taken to handle a command on the item resource")
     private <TReturned> TReturned handleCommand(Command<TReturned> command) {
         if (command instanceof CreateTodoItemCommand createTodoItemCommand) {
             return (TReturned) todoItemService.createTodoItem(createTodoItemCommand);
@@ -63,6 +66,7 @@ public class TodoItemDispatcher implements Dispatcher {
      * @param <TReturned> The return type of the query
      * @return The result of the query's handling
      */
+    @Timed(value = "item.dispatcher.time.query", description = "Time taken to handle a query on the item resource")
     private <TReturned> TReturned handleQuery(Query<TReturned> query) {
         if (query instanceof GetTodoItemsQuery getTodoItemsQuery) {
             return (TReturned) todoItemService.getTodoItems(getTodoItemsQuery);
