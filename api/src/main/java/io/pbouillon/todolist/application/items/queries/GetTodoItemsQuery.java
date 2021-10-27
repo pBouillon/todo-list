@@ -1,6 +1,6 @@
 package io.pbouillon.todolist.application.items.queries;
 
-import io.pbouillon.todolist.application.commons.PageableQuery;
+import io.pbouillon.todolist.application.commons.cqrs.PageableQuery;
 import io.pbouillon.todolist.application.commons.cqrs.CqrsOperation;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
 import io.pbouillon.todolist.domain.entities.TodoItem;

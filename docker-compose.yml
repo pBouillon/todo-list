@@ -15,9 +15,21 @@ services:
     networks:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongodb
       - redis
+
+  grafana:
+    image: grafana/grafana:8.2.2
+    ports:
+      - 3000:3000
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./configs/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
 
   mongodb:
     image: mongo:5.0
@@ -46,6 +58,17 @@ services:
       - mongodb
     restart: always
 
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    ports:
+      - 9090:9090
+    networks:
+      - prometheus
+    volumes:
+      - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    # depends_on:
+    #   - api
+
   redis:
     image: redis:6-alpine
     ports:
@@ -56,4 +79,5 @@ services:
 
 networks:
   mongo:
+  prometheus:
   redis:

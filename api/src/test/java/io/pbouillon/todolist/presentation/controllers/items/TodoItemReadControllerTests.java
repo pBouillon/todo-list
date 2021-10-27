@@ -1,6 +1,6 @@
 package io.pbouillon.todolist.presentation.controllers.items;
 
-import io.pbouillon.todolist.application.commons.PageableQuery;
+import io.pbouillon.todolist.application.commons.cqrs.PageableQuery;
 import io.pbouillon.todolist.domain.entities.TodoItem;
 import io.pbouillon.todolist.infrastructure.persistence.repositories.TodoItemRepository;
 import org.junit.jupiter.api.DisplayName;

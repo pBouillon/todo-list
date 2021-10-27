@@ -1,6 +1,6 @@
 package io.pbouillon.todolist.presentation.controllers.items;
 
-import io.pbouillon.todolist.application.commons.PageableQuery;
+import io.pbouillon.todolist.application.commons.cqrs.PageableQuery;
 import io.pbouillon.todolist.application.commons.cqrs.Query;
 import io.pbouillon.todolist.application.items.TodoItemDispatcher;
 import io.pbouillon.todolist.application.items.dtos.TodoItemDto;
